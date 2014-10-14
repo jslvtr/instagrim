@@ -31,6 +31,7 @@ import javax.imageio.ImageIO;
 import static org.imgscalr.Scalr.*;
 import org.imgscalr.Scalr.Method;
 
+import uk.ac.dundee.computing.aec.instagrim.Constants;
 import uk.ac.dundee.computing.aec.instagrim.lib.*;
 import uk.ac.dundee.computing.aec.instagrim.stores.Pic;
 //import uk.ac.dundee.computing.aec.stores.TweetStore;
@@ -39,22 +40,16 @@ public class PicModel {
 
     Cluster cluster;
 
-    public void PicModel() {
-
-    }
-
     public void setCluster(Cluster cluster) {
         this.cluster = cluster;
     }
 
     public void insertPic(byte[] b, String type, String name, String user) {
         try {
-            Convertors convertor = new Convertors();
-
-            String types[]= Convertors.SplitFiletype(type);
+            String types[]= Converters.SplitFiletype(type);
             ByteBuffer buffer = ByteBuffer.wrap(b);
             int length = b.length;
-            java.util.UUID picid = convertor.getTimeUUID();
+            java.util.UUID picid = Converters.getTimeUUID();
             
             //The following is a quick and dirty way of doing this, will fill the disk quickly !
             Boolean success = (new File("/var/tmp/instagrim/")).mkdirs();
@@ -132,7 +127,8 @@ public class PicModel {
     public java.util.LinkedList<Pic> getPicsForUser(String User) {
         java.util.LinkedList<Pic> Pics = new java.util.LinkedList<>();
         Session session = cluster.connect("instagrim");
-        PreparedStatement ps = session.prepare("select picid from userpiclist where user =?");
+        PreparedStatement ps = session.prepare("SELECT picid FROM userpiclist WHERE user =?");
+        if(Constants.VERBOSE) System.out.println("SELECT picid FROM userpiclist WHERE user = " + User);
         ResultSet rs = null;
         BoundStatement boundStatement = new BoundStatement(ps);
         rs = session.execute( // this is where the query is executed
@@ -160,16 +156,16 @@ public class PicModel {
         String type = null;
         int length = 0;
         try {
-            Convertors convertor = new Convertors();
+            Converters convertor = new Converters();
             ResultSet rs = null;
             PreparedStatement ps = null;
          
-            if (image_type == Convertors.DISPLAY_IMAGE) {
+            if (image_type == Converters.DISPLAY_IMAGE) {
                 
                 ps = session.prepare("select image,imagelength,type from pics where picid =?");
-            } else if (image_type == Convertors.DISPLAY_THUMB) {
+            } else if (image_type == Converters.DISPLAY_THUMB) {
                 ps = session.prepare("select thumb,imagelength,thumblength,type from pics where picid =?");
-            } else if (image_type == Convertors.DISPLAY_PROCESSED) {
+            } else if (image_type == Converters.DISPLAY_PROCESSED) {
                 ps = session.prepare("select processed,processedlength,type from pics where picid =?");
             }
             BoundStatement boundStatement = new BoundStatement(ps);
@@ -182,14 +178,14 @@ public class PicModel {
                 return null;
             } else {
                 for (Row row : rs) {
-                    if (image_type == Convertors.DISPLAY_IMAGE) {
+                    if (image_type == Converters.DISPLAY_IMAGE) {
                         bImage = row.getBytes("image");
                         length = row.getInt("imagelength");
-                    } else if (image_type == Convertors.DISPLAY_THUMB) {
+                    } else if (image_type == Converters.DISPLAY_THUMB) {
                         bImage = row.getBytes("thumb");
                         length = row.getInt("thumblength");
                 
-                    } else if (image_type == Convertors.DISPLAY_PROCESSED) {
+                    } else if (image_type == Converters.DISPLAY_PROCESSED) {
                         bImage = row.getBytes("processed");
                         length = row.getInt("processedlength");
                     }

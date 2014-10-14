@@ -5,13 +5,10 @@ import java.util.StringTokenizer;
 import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
-public final class Convertors {
+public final class Converters {
     public static int DISPLAY_IMAGE=0;
     public static int DISPLAY_THUMB=1;
     public static int DISPLAY_PROCESSED=2;
-    public void Converters() {
-
-    }
 
     public static UUID getTimeUUID() {
         return UUID.fromString(new com.eaio.uuid.UUID().toString());
@@ -90,7 +87,7 @@ public final class Convertors {
     public static String[] SplitTags(String Tags) {
         String args[];
 
-        StringTokenizer st = Convertors.SplitTagString(Tags);
+        StringTokenizer st = Converters.SplitTagString(Tags);
         args = new String[st.countTokens() + 1];  //+1 for _No_Tag_
         //Lets assume the number is the last argument
 

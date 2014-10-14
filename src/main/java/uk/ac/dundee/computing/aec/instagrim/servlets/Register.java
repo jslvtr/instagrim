@@ -52,7 +52,7 @@ public class Register extends HttpServlet {
         us.setCluster(cluster);
         us.RegisterUser(username, password);
         
-	response.sendRedirect("/Instagrim");
+	response.sendRedirect("/");
         
     }
 

@@ -1,20 +1,28 @@
 package uk.ac.dundee.computing.aec.instagrim.lib;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.datastax.driver.core.*;
+import uk.ac.dundee.computing.aec.instagrim.Constants;
 
+/**
+ * Class to create the Cassandra Keyspace and tables.
+ *
+ * @author jslvtr
+ * @author Andy Cobley
+ *
+ * @version 1.0
+ * @since 14 Oct 2014
+ */
 public final class Keyspaces {
 
-    public Keyspaces() {
-
-    }
-
+    /**
+     * Method that creates the keyspace and tables for the Cassandra cluster.
+     * Does not raise exceptions, but will print an error message out.
+     *
+     * @param c: the Cassandra cluster to create the keyspace and tables in.
+     */
     public static void SetUpKeySpaces(Cluster c) {
         try {
-            //Add some keyspaces here
-            String createkeyspace = "create keyspace if not exists instagrim  WITH replication = {'class':'SimpleStrategy', 'replication_factor':1}";
+            String CreateKeyspace = "CREATE KEYSPACE if not exists instagrim  WITH replication = {'class':'SimpleStrategy', 'replication_factor':1}";
             String CreatePicTable = "CREATE TABLE if not exists instagrim.Pics ("
                     + " user varchar,"
                     + " picid uuid, "
@@ -30,7 +38,7 @@ public final class Keyspaces {
                     + " name  varchar,"
                     + " PRIMARY KEY (picid)"
                     + ")";
-            String Createuserpiclist = "CREATE TABLE if not exists instagrim.userpiclist (\n"
+            String CreateUserPicList = "CREATE TABLE if not exists instagrim.userpiclist (\n"
                     + "picid uuid,\n"
                     + "user varchar,\n"
                     + "pic_added timestamp,\n"
@@ -43,60 +51,84 @@ public final class Keyspaces {
                     + "  );";
             String CreateUserProfile = "CREATE TABLE if not exists instagrim.userprofiles (\n"
                     + "      login text PRIMARY KEY,\n"
-                     + "     password text,\n"
+                    + "     password text,\n"
                     + "      first_name text,\n"
                     + "      last_name text,\n"
                     + "      email set<text>,\n"
                     + "      addresses  map<text, frozen <address>>\n"
                     + "  );";
+
+            // Connects to the Cassandra cluster, `c`.
             Session session = c.connect();
+
+            // Creates the Keyspace.
             try {
-                PreparedStatement statement = session
-                        .prepare(createkeyspace);
-                BoundStatement boundStatement = new BoundStatement(
-                        statement);
-                ResultSet rs = session
-                        .execute(boundStatement);
-                System.out.println("created instagrim ");
+                PreparedStatement statement = session.prepare(CreateKeyspace);
+                BoundStatement boundStatement = new BoundStatement(statement);
+                if(Constants.VERBOSE) System.out.println("Executing Keyspace prepared statement...");
+                session.execute(boundStatement);
+                if(Constants.VERBOSE) System.out.println("Created instagrim Keyspace.");
             } catch (Exception et) {
-                System.out.println("Can't create instagrim " + et);
+                if(Constants.VERBOSE) System.out.println("Can't create instagrim: " + et);
             }
 
-            //now add some column families 
-            System.out.println("" + CreatePicTable);
+            /*
+             * Create the TABLEs in Cassandra cluster, `c`.
+             */
+
+            // Create the `Pic` table.
+            if(Constants.DEBUG && Constants.VERBOSE) System.out.println("" + CreatePicTable);
 
             try {
                 SimpleStatement cqlQuery = new SimpleStatement(CreatePicTable);
+                if(Constants.VERBOSE) System.out.println("Executing CreatePicTable query...");
                 session.execute(cqlQuery);
             } catch (Exception et) {
-                System.out.println("Can't create tweet table " + et);
+                if(Constants.VERBOSE) System.out.println("Can't create tweet table: " + et);
+                if(Constants.DEBUG) et.printStackTrace();
             }
-            System.out.println("" + Createuserpiclist);
+
+            // Create the `userpiclist` table.
+            if(Constants.DEBUG && Constants.VERBOSE) System.out.println("" + CreateUserPicList);
 
             try {
-                SimpleStatement cqlQuery = new SimpleStatement(Createuserpiclist);
+                SimpleStatement cqlQuery = new SimpleStatement(CreateUserPicList);
+                if(Constants.VERBOSE) System.out.println("Executing CreateUserPicList query...");
                 session.execute(cqlQuery);
             } catch (Exception et) {
-                System.out.println("Can't create user pic list table " + et);
+                if(Constants.VERBOSE) System.out.println("Can't create user pic list table: " + et);
+                if(Constants.DEBUG) et.printStackTrace();
             }
-            System.out.println("" + CreateAddressType);
+
+            // Create the `AddressType` table.
+            if(Constants.DEBUG && Constants.VERBOSE) System.out.println("" + CreateAddressType);
+
             try {
                 SimpleStatement cqlQuery = new SimpleStatement(CreateAddressType);
+                if(Constants.VERBOSE) System.out.println("Executing CreateAddressType query...");
                 session.execute(cqlQuery);
             } catch (Exception et) {
-                System.out.println("Can't create Address type " + et);
+                if(Constants.VERBOSE) System.out.println("Can't create Address type: " + et);
+                if(Constants.DEBUG) et.printStackTrace();
             }
-            System.out.println("" + CreateUserProfile);
+
+            // Create the `UserProfile` table.
+            if(Constants.DEBUG && Constants.VERBOSE) System.out.println("" + CreateUserProfile);
+
             try {
                 SimpleStatement cqlQuery = new SimpleStatement(CreateUserProfile);
+                if(Constants.VERBOSE) System.out.println("Executing CreateUserProfile query...");
                 session.execute(cqlQuery);
             } catch (Exception et) {
-                System.out.println("Can't create Address Profile " + et);
+                if(Constants.VERBOSE) System.out.println("Can't create Address Profile: " + et);
+                if(Constants.DEBUG) et.printStackTrace();
             }
+
             session.close();
 
         } catch (Exception et) {
-            System.out.println("Other keyspace or coulm definition error" + et);
+            if(Constants.VERBOSE) System.out.println("Other keyspace or coulm definition error" + et);
+            if(Constants.DEBUG) et.printStackTrace();
         }
 
     }

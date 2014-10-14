@@ -2,25 +2,24 @@ package uk.ac.dundee.computing.aec.instagrim.lib;
 
 import java.net.URLDecoder;
 import java.util.StringTokenizer;
-//import java.util.UUID;
+import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
-import com.eaio.uuid.UUID;
 
 public final class Convertors {
     public static int DISPLAY_IMAGE=0;
     public static int DISPLAY_THUMB=1;
     public static int DISPLAY_PROCESSED=2;
-    public void Convertors() {
+    public void Converters() {
 
     }
 
-    public static java.util.UUID getTimeUUID() {
-        return java.util.UUID.fromString(new com.eaio.uuid.UUID().toString());
+    public static UUID getTimeUUID() {
+        return UUID.fromString(new com.eaio.uuid.UUID().toString());
     }
     
     
 
-    public static byte[] asByteArray(java.util.UUID uuid) {
+    public static byte[] asByteArray(UUID uuid) {
 
         long msb = uuid.getMostSignificantBits();
         long lsb = uuid.getLeastSignificantBits();
@@ -37,7 +36,7 @@ public final class Convertors {
     }
 
     public static byte[] longToByteArray(long value) {
-        byte[] buffer = new byte[8]; //longs are 8 bytes I believe
+        byte[] buffer = new byte[8]; //longs are 8 bytes
         for (int i = 7; i >= 0; i--) { //fill from the right
             buffer[i] = (byte) (value & 0x00000000000000ff); //get the bottom byte
 
@@ -89,15 +88,14 @@ public final class Convertors {
     }
 
     public static String[] SplitTags(String Tags) {
-        String args[] = null;
+        String args[];
 
         StringTokenizer st = Convertors.SplitTagString(Tags);
         args = new String[st.countTokens() + 1];  //+1 for _No_Tag_
         //Lets assume the number is the last argument
 
         int argv = 0;
-        while (st.hasMoreTokens()) {;
-            args[argv] = new String();
+        while (st.hasMoreTokens()) {
             args[argv] = st.nextToken();
             argv++;
         }
@@ -111,16 +109,14 @@ public final class Convertors {
     }
 
     public static String[] SplitFiletype(String type) {
-        String args[] = null;
+        String args[];
 
         StringTokenizer st = SplitString(type);
         args = new String[st.countTokens()];
 		//Lets assume the number is the last argument
 
         int argv = 0;
-        while (st.hasMoreTokens()) {;
-            args[argv] = new String();
-
+        while (st.hasMoreTokens()) {
             args[argv] = st.nextToken();
             try {
                 //System.out.println("String was "+URLDecoder.decode(args[argv],"UTF-8"));
@@ -138,15 +134,14 @@ public final class Convertors {
     }
     
     public static String[] SplitRequestPath(HttpServletRequest request) {
-        String args[] = null;
+        String args[];
 
         StringTokenizer st = SplitString(request.getRequestURI());
         args = new String[st.countTokens()];
 		//Lets assume the number is the last argument
 
         int argv = 0;
-        while (st.hasMoreTokens()) {;
-            args[argv] = new String();
+        while (st.hasMoreTokens()) {
 
             args[argv] = st.nextToken();
             try {

@@ -29,7 +29,7 @@ public final class CassandraHosts {
     }
 
     public static String getHost() {
-        return (Host);
+        return Host;
     }
 
     public static String[] getHosts(Cluster cluster) {

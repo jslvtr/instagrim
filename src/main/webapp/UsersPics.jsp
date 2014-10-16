@@ -43,7 +43,7 @@
                 Pic p = (Pic) iterator.next();
 
         %>
-        <a href="/Image/<%=p.getSUUID()%>" ><img src="/Thumb/<%=p.getSUUID()%>"></a><br/><%
+        <a href="/Image/<%=p.getUUID()%>" ><img src="/Thumb/<%=p.getUUID()%>"></a><br/><%
 
             }
             }

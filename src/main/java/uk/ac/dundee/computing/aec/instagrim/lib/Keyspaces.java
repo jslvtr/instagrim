@@ -25,7 +25,7 @@ public final class Keyspaces {
             String CreateKeyspace = "CREATE KEYSPACE if not exists instagrim  WITH replication = {'class':'SimpleStrategy', 'replication_factor':1}";
             String CreatePicTable = "CREATE TABLE if not exists instagrim.Pics ("
                     + " user varchar,"
-                    + " picid uuid, "
+                    + " picid uuid PRIMARY KEY, "
                     + " interaction_time timestamp,"
                     + " title varchar,"
                     + " image blob,"
@@ -33,17 +33,16 @@ public final class Keyspaces {
                     + " processed blob,"
                     + " imagelength int,"
                     + " thumblength int,"
-                    + "  processedlength int,"
+                    + " processedlength int,"
                     + " type  varchar,"
-                    + " name  varchar,"
-                    + " PRIMARY KEY (picid)"
+                    + " name  varchar"
                     + ")";
             String CreateUserPicList = "CREATE TABLE if not exists instagrim.userpiclist (\n"
                     + "picid uuid,\n"
                     + "user varchar,\n"
                     + "pic_added timestamp,\n"
-                    + "PRIMARY KEY (user,pic_added)\n"
-                    + ") WITH CLUSTERING ORDER BY (pic_added desc);";
+                    + "PRIMARY KEY (user,picid,pic_added)\n"
+                    + ") WITH CLUSTERING ORDER BY (picid desc, pic_added desc);";
             String CreateAddressType = "CREATE TYPE if not exists instagrim.address (\n"
                     + "      street text,\n"
                     + "      city text,\n"

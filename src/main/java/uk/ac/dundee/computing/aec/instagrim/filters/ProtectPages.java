@@ -43,6 +43,13 @@ public class ProtectPages implements Filter {
     public ProtectPages() {
     }
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @throws IOException
+     * @throws ServletException
+     */
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if(debug) {

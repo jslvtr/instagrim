@@ -82,7 +82,29 @@ public class Image extends HttpServlet {
 
         try {
             if(args[0].equals("Image")) {
-                DisplayImage(Converters.DISPLAY_PROCESSED, args[1], response);
+                try {
+                    if(args[2] != null && args[2].toLowerCase().equals("delete")) {
+                        DeleteImage(args[1], request, response);
+                        return;
+                    }
+                } catch(ArrayIndexOutOfBoundsException ex) {
+                    if(Constants.VERBOSE) {
+                        System.out.println("Error accessing args[2]. Image is most likely not being deleted!");
+                    }
+                    if(Constants.DEBUG) {
+                        ex.printStackTrace();
+                    }
+                }
+                try {
+                    DisplayImage(Converters.DISPLAY_PROCESSED, args[1], response);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    if(Constants.VERBOSE) {
+                        System.out.println("Error accessing args[1]. Maybe no argument was provided?");
+                    }
+                    if(Constants.DEBUG) {
+                        e.printStackTrace();
+                    }
+                }
             } else if(args[0].equals("Images")) {
                 DisplayImageList(args[1], request, response);
             } else if(args[0].equals("Thumb")) {
@@ -95,6 +117,34 @@ public class Image extends HttpServlet {
                 e.printStackTrace();
             }
 
+        }
+    }
+
+    /**
+     *
+     * @param uuid
+     * @param request
+     * @param response
+     */
+    private void DeleteImage(String uuid, HttpServletRequest request, HttpServletResponse response) {
+        PicModel tm = new PicModel();
+        tm.setCluster(cluster);
+
+        LoggedIn lg = (LoggedIn)request.getSession().getAttribute("LoggedIn");
+        if(lg.getlogedin()) {
+            tm.deletePic(lg.getUsername(), java.util.UUID.fromString(uuid));
+        }
+
+        RequestDispatcher rd = request.getRequestDispatcher("/UsersPics.jsp");
+        try {
+            rd.forward(request, response);
+        } catch (IOException | ServletException e) {
+            if(Constants.VERBOSE) {
+                System.out.println("Error forwarding after deleting image.");
+            }
+            if(Constants.DEBUG) {
+                e.printStackTrace();
+            }
         }
     }
 

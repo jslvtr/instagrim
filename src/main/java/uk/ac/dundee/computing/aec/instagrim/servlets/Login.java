@@ -1,15 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package uk.ac.dundee.computing.aec.instagrim.servlets;
 
 import com.datastax.driver.core.Cluster;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -54,8 +47,6 @@ public class Login extends HttpServlet {
      *
      * @param request  servlet request
      * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException      if an I/O error occurs
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
@@ -89,7 +80,7 @@ public class Login extends HttpServlet {
 
         if(isValid) {
             LoggedIn lg = new LoggedIn();
-            lg.setLogedin();
+            lg.setLoggedIn();
             lg.setUsername(username);
             //request.setAttribute("LoggedIn", lg);
 

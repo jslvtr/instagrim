@@ -131,11 +131,12 @@ public class Image extends HttpServlet {
         tm.setCluster(cluster);
 
         LoggedIn lg = (LoggedIn)request.getSession().getAttribute("LoggedIn");
-        if(lg.getlogedin()) {
-            tm.deletePic(lg.getUsername(), java.util.UUID.fromString(uuid));
+        String username = lg.getUsername();
+        if(lg.getLoggedIn()) {
+            tm.deletePic(username, java.util.UUID.fromString(uuid));
         }
 
-        RequestDispatcher rd = request.getRequestDispatcher("/UsersPics.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher("/Images/" + username);
         try {
             rd.forward(request, response);
         } catch (IOException | ServletException e) {
@@ -221,7 +222,7 @@ public class Image extends HttpServlet {
             HttpSession session = request.getSession();
             LoggedIn lg = (LoggedIn)session.getAttribute("LoggedIn");
 
-            if(lg.getlogedin()) {
+            if(lg.getLoggedIn()) {
                 username = lg.getUsername();
             }
 

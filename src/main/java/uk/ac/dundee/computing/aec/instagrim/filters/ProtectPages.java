@@ -127,7 +127,7 @@ public class ProtectPages implements Filter {
             System.out.println("Session in filter " + session);
         }
 
-        if(li == null || !li.getlogedin()) {
+        if(li == null || !li.getLoggedIn()) {
             if(Constants.VERBOSE) {
                 System.out.println("Foward to login");
             }

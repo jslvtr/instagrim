@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package uk.ac.dundee.computing.aec.instagrim.stores;
 
 /**
@@ -11,29 +5,52 @@ package uk.ac.dundee.computing.aec.instagrim.stores;
  * @author Administrator
  */
 public class LoggedIn {
-    boolean logedin=false;
-    String Username=null;
-    public void LogedIn(){
-        
+    boolean loggedIn = false;
+    String username = null;
+
+    /**
+     * Sets the username of this LoggedIn instance.
+     * @param username the username to set to.
+     */
+    public void setUsername(String username){
+        this.username = username;
     }
-    
-    public void setUsername(String name){
-        this.Username=name;
-    }
+
+    /**
+     * Gets the username of this LoggedIn instance.
+     * @return the username
+     */
     public String getUsername(){
-        return Username;
+        return this.username;
     }
-    public void setLogedin(){
-        logedin=true;
+
+    /**
+     * Sets the status to "logged in" (true).
+     */
+    public void setLoggedIn(){
+        this.loggedIn = true;
     }
-    public void setLogedout(){
-        logedin=false;
+
+    /**
+     * Sets the status to "logged out" (false).
+     */
+    public void setLoggedOut(){
+        this.loggedIn = false;
     }
-    
-    public void setLoginState(boolean logedin){
-        this.logedin=logedin;
+
+    /**
+     * Sets the status to either true or false.
+     * @param loggedIn whether the user is logged in or not.
+     */
+    public void setLoginState(boolean loggedIn){
+        this.loggedIn = loggedIn;
     }
-    public boolean getlogedin(){
-        return logedin;
+
+    /**
+     * Gets the current status of the instance, whether it is logged in or not.
+     * @return true if logged in, false otherwise.
+     */
+    public boolean getLoggedIn(){
+        return this.loggedIn;
     }
 }

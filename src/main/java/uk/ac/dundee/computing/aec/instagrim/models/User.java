@@ -86,7 +86,7 @@ public class User {
 
         try {
             Session session = cluster.connect("instagrim");
-            PreparedStatement ps = session.prepare("select password from userprofiles where login =?");
+            PreparedStatement ps = session.prepare("select password from userprofiles where login = ?");
             ResultSet rs;
             BoundStatement boundStatement = new BoundStatement(ps);
 

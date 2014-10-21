@@ -4,9 +4,16 @@ package uk.ac.dundee.computing.aec.instagrim.stores;
  *
  * @author Administrator
  */
-public class LoggedIn {
+public class LoggedIn implements java.io.Serializable {
     boolean loggedIn = false;
     String username = null;
+
+    /**
+     * Nullary constructor as part of the JavaBean standard.
+     */
+    public LoggedIn() {
+
+    }
 
     /**
      * Sets the username of this LoggedIn instance.

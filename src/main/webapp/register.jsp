@@ -19,7 +19,6 @@
         </header>
         <nav>
             <ul>
-                
                 <li><a href="/Images/majed">Sample Images</a></li>
             </ul>
         </nav>
@@ -32,7 +31,7 @@
                     <li>Password <input type="password" name="password"></li>
                 </ul>
                 <br/>
-                <input type="submit" value="Regidter"> 
+                <input type="submit" value="Register">
             </form>
 
         </article>

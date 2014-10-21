@@ -27,13 +27,13 @@
                     <%
                         
                         LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
-                        if (lg != null) {
-                            String UserName = lg.getUsername();
-                            if (lg.getLoggedIn()) {
+                        if (lg != null && lg.getLoggedIn()) {
                     %>
 
                 <li><a href="/Images/<%=lg.getUsername()%>">Your Images</a></li>
-                    <%}
+                <li><a href="/profile/<%=lg.getUsername()%>">Your Profile</a></li>
+                <li><a href="edit_profile.jsp">Edit your profile</a></li>
+                <%
                             }else{
                                 %>
                  <li><a href="register.jsp">Register</a></li>

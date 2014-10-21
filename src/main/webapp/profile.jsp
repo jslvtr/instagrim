@@ -45,11 +45,13 @@
     <%
             }
             if(profile.getContent() != null && !profile.getContent().equals("")) {
+                for(String line : profile.getContent().split("\r\n")) {
     %>
 
 
-    <p><%=profile.getContent()%></p>
+    <p><%=line%></p>
     <%
+                }
             } else {
     %>
     <p>There's nothing here yet!</p>

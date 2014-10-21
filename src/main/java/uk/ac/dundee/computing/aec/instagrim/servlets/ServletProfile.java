@@ -52,6 +52,10 @@ public class ServletProfile extends HttpServlet {
         String content = request.getParameter("content");
         if(Constants.VERBOSE) {
             System.out.println("New profile content: " + content);
+            String[] contentArray = content.split("\r\n");
+            for(String line : contentArray) {
+                System.out.println(line);
+            }
         }
 
         LoggedIn lg = (LoggedIn)request.getSession().getAttribute("LoggedIn");

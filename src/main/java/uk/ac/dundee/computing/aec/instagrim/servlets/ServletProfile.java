@@ -80,7 +80,10 @@ public class ServletProfile extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         LoggedIn lg = (LoggedIn)request.getSession().getAttribute("LoggedIn");
-        String username = lg.getUsername();
+        String username = "";
+        if(lg != null) {
+            username = lg.getUsername();
+        }
 
         String args[] = Converters.SplitRequestPath(request);
 

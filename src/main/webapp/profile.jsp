@@ -38,7 +38,7 @@
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li><a href="upload.jsp">Upload</a></li>
+                <li><a href="/upload.jsp">Upload</a></li>
 
                 <%
                     if (lg != null && lg.getLoggedIn()) {
@@ -49,16 +49,16 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Profile <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">View your profile</a></li>
-                        <li><a href="#">Edit your profile</a></li>
+                        <li><a href="/profile/<%=lg.getUsername()%>">View your profile</a></li>
+                        <li><a href="/edit_profile.jsp">Edit your profile</a></li>
                     </ul>
                 </li>
 
                 <%
                     } else {
                 %>
-                <li><a href="register.jsp">Register</a></li>
-                <li><a href="login.jsp">Login</a></li>
+                <li><a href="/register.jsp">Register</a></li>
+                <li><a href="/login.jsp">Login</a></li>
                 <%
                     }
                 %>

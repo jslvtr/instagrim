@@ -24,7 +24,6 @@
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
@@ -35,30 +34,41 @@
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li><a href="upload.jsp">Upload</a></li>
-                    <li><a href="register.jsp">Register</a></li>
-                    <li class="active"><a href="login.jsp">Login</a></li>
+                    <li><a href="/upload.jsp">Upload</a></li>
+                    <li><a href="/register.jsp">Register</a></li>
+                    <li class="active"><a href="/login.jsp">Login</a></li>
                 </ul>
             </div>
         </div>
     </nav>
        
         <article>
-            <h3>Login</h3>
-            <form method="POST"  action="Login">
-                <ul>
-                    <li>User Name <input type="text" name="username"></li>
-                    <li>Password <input type="password" name="password"></li>
-                </ul>
-                <br/>
-                <input type="submit" value="Login"> 
+            <h1>Instagrim <small>login</small></h1>
+            <br/>
+            <form method="POST" action="Login" role="form" class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-xs-4">
+                        <label for="inputUsername" class="col-sm-2 control-label">Email</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="inputUsername" name="username">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-xs-4">
+                        <label for="inputPassword" class="col-sm-2 control-label">Password</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" id="inputPassword" name="password">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-default">Sign in</button>
+                    </div>
+                </div>
             </form>
 
         </article>
-        <footer>
-            <ul>
-                <li class="footer"><a href="/">Home</a></li>
-            </ul>
-        </footer>
     </body>
 </html>

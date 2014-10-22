@@ -34,7 +34,7 @@
 
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="upload.jsp">Upload</a></li>
+                        <li class="active"><a href="/upload.jsp">Upload</a></li>
 
                         <%
                             LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
@@ -46,16 +46,16 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Profile <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">View your profile</a></li>
-                                <li><a href="#">Edit your profile</a></li>
+                                <li><a href="/profile/<%=lg.getUsername()%>">View your profile</a></li>
+                                <li><a href="/edit_profile.jsp">Edit your profile</a></li>
                             </ul>
                         </li>
 
                         <%
                         } else {
                         %>
-                        <li><a href="register.jsp">Register</a></li>
-                        <li><a href="login.jsp">Login</a></li>
+                        <li><a href="/register.jsp">Register</a></li>
+                        <li><a href="/login.jsp">Login</a></li>
                         <%
                             }
                         %>
@@ -67,19 +67,23 @@
         </nav>
  
         <article>
-            <h3>File Upload</h3>
+            <h1>Instagrim <small>File Upload</small></h1>
             <form method="POST" enctype="multipart/form-data" action="Image">
-                File to upload: <input type="file" name="upfile"><br/>
-
-                <br/>
-                <input type="submit" value="Press"> to upload the file!
+                <div class="form-group">
+                    <div class="col-xs-4">
+                        <label for="uploadFile" class="col-sm-2 control-label">File to upload</label>
+                        <div class="col-sm-10">
+                            <input type="file" class="form-control" id="uploadFile" name="upfile">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-default">Upload</button>
+                    </div>
+                </div>
             </form>
 
         </article>
-        <footer>
-            <ul>
-                <li class="footer"><a href="/">Home</a></li>
-            </ul>
-        </footer>
     </body>
 </html>

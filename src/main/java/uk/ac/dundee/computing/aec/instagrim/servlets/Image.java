@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.UUID;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -23,6 +24,7 @@ import javax.servlet.http.Part;
 import uk.ac.dundee.computing.aec.instagrim.Constants;
 import uk.ac.dundee.computing.aec.instagrim.lib.CassandraHosts;
 import uk.ac.dundee.computing.aec.instagrim.lib.Converters;
+import uk.ac.dundee.computing.aec.instagrim.models.CommentModel;
 import uk.ac.dundee.computing.aec.instagrim.models.PicModel;
 import uk.ac.dundee.computing.aec.instagrim.stores.LoggedIn;
 import uk.ac.dundee.computing.aec.instagrim.stores.Pic;
@@ -40,7 +42,8 @@ import uk.ac.dundee.computing.aec.instagrim.stores.Pic;
         "/Image/*",
         "/Thumb/*",
         "/Images",
-        "/Images/*"
+        "/Images/*",
+        "/FullImage/*"
 })
 @MultipartConfig
 public class Image extends HttpServlet {
@@ -95,8 +98,9 @@ public class Image extends HttpServlet {
                         ex.printStackTrace();
                     }
                 }
-                try {
-                    DisplayImage(Converters.DISPLAY_PROCESSED, args[1], response);
+
+                try { //show image with comments
+                    DisplayImageWithComments(args[1], request, response);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     if(Constants.VERBOSE) {
                         System.out.println("Error accessing args[1]. Maybe no argument was provided?");
@@ -109,6 +113,17 @@ public class Image extends HttpServlet {
                 DisplayImageList(args[1], request, response);
             } else if(args[0].equals("Thumb")) {
                 DisplayImage(Converters.DISPLAY_THUMB, args[1], response);
+            } else if(args[0].equals("FullImage")) { //display image as raw
+                try {
+                    DisplayImage(Converters.DISPLAY_PROCESSED, args[1], response);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    if(Constants.VERBOSE) {
+                        System.out.println("Error accessing args[1]. Maybe no argument was provided?");
+                    }
+                    if(Constants.DEBUG) {
+                        e.printStackTrace();
+                    }
+                }
             } else {
                 error("Bad Operator", response);
             }
@@ -118,6 +133,19 @@ public class Image extends HttpServlet {
             }
 
         }
+    }
+
+    private void DisplayImageWithComments(String arg, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        RequestDispatcher rd = request.getRequestDispatcher("/image_comments.jsp");
+
+        request.setAttribute("image", arg);
+        CommentModel cm = new CommentModel(this.cluster);
+
+        request.setAttribute("commentList", cm.getCommentsForThread(UUID.fromString(arg)));
+
+        rd.forward(request, response);
+
     }
 
     /**

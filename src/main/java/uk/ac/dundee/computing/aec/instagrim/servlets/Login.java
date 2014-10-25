@@ -3,6 +3,7 @@ package uk.ac.dundee.computing.aec.instagrim.servlets;
 import com.datastax.driver.core.Cluster;
 
 import java.io.IOException;
+import java.util.UUID;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -56,9 +57,9 @@ public class Login extends HttpServlet {
 
         User us = new User();
         us.setCluster(cluster);
-        boolean isValid = false;
+        UUID userID = null;
         try {
-            isValid = us.IsValidUser(username, password);
+            userID = us.IsValidUser(username, password);
         } catch (NullPointerException se) {
             try {
                 response.setStatus(500);
@@ -78,10 +79,11 @@ public class Login extends HttpServlet {
             System.out.println("Session in servlet " + session);
         }
 
-        if(isValid) {
+        if(userID != null) {
             LoggedIn lg = new LoggedIn();
             lg.setLoggedIn();
             lg.setUsername(username);
+            lg.setUserID(userID);
             //request.setAttribute("LoggedIn", lg);
 
             session.setAttribute("LoggedIn", lg);

@@ -1,5 +1,7 @@
 package uk.ac.dundee.computing.aec.instagrim.stores;
 
+import java.util.UUID;
+
 /**
  *
  * @author Administrator
@@ -7,6 +9,7 @@ package uk.ac.dundee.computing.aec.instagrim.stores;
 public class LoggedIn implements java.io.Serializable {
     boolean loggedIn = false;
     String username = null;
+    UUID UserID = null;
 
     /**
      * Nullary constructor as part of the JavaBean standard.
@@ -59,5 +62,13 @@ public class LoggedIn implements java.io.Serializable {
      */
     public boolean getLoggedIn(){
         return this.loggedIn;
+    }
+
+    public UUID getUserID() {
+        return UserID;
+    }
+
+    public void setUserID(UUID userID) {
+        UserID = userID;
     }
 }

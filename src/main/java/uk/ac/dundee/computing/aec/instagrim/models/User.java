@@ -10,6 +10,7 @@ import com.datastax.driver.core.Session;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 
 import uk.ac.dundee.computing.aec.instagrim.Constants;
 import uk.ac.dundee.computing.aec.instagrim.lib.AeSimpleSHA1;
@@ -36,7 +37,7 @@ public class User {
      * @param password the password for the username we're adding.
      * @return true if the username was added, false otherwise.
      */
-    public boolean RegisterUser(String username, String password) {
+    public boolean RegisterUser(String username, String password, java.util.UUID user_id) {
         String EncodedPassword;
 
         try {
@@ -48,10 +49,10 @@ public class User {
 
         try {
             Session session = cluster.connect("instagrim");
-            PreparedStatement ps = session.prepare("insert into userprofiles (login,password) Values(?,?)");
+            PreparedStatement ps = session.prepare("insert into userprofiles (login,userid,password) Values(?,?,?)");
 
             BoundStatement boundStatement = new BoundStatement(ps);
-            session.execute(boundStatement.bind(username, EncodedPassword));
+            session.execute(boundStatement.bind(username, user_id, EncodedPassword));
             //We are assuming this always works.  Also a transaction would be good here !
 
             return true;
@@ -74,32 +75,33 @@ public class User {
      * @param password password to check whether it's right or not.
      * @return true if the user is valid, false otherwise.
      */
-    public boolean IsValidUser(String username, String password) throws NullPointerException {
+    public UUID IsValidUser(String username, String password) throws NullPointerException {
         String EncodedPassword;
 
         try {
             EncodedPassword = AeSimpleSHA1.SHA1(password);
         } catch(UnsupportedEncodingException | NoSuchAlgorithmException et) {
             System.out.println("Can't check your password");
-            return false;
+            return null;
         }
 
         try {
             Session session = cluster.connect("instagrim");
-            PreparedStatement ps = session.prepare("select password from userprofiles where login = ?");
+            PreparedStatement ps = session.prepare("select userid, password from userprofiles where login = ?");
             ResultSet rs;
             BoundStatement boundStatement = new BoundStatement(ps);
 
             rs = session.execute(boundStatement.bind(username));
 
             if(rs.isExhausted()) {
-                System.out.println("No Images returned");
-                return false;
+                System.out.println("User doesn't exist!");
+                return null;
             } else {
                 for(Row row : rs) {
                     String StoredPass = row.getString("password");
-                    if(StoredPass.compareTo(EncodedPassword) == 0)
-                        return true;
+                    if(StoredPass.compareTo(EncodedPassword) == 0) {
+                        return row.getUUID("userid");
+                    }
                 }
             }
         } catch(NullPointerException e) {
@@ -111,7 +113,31 @@ public class User {
         }
 
 
-        return false;
+        return null;
+    }
+
+    public String getUsernameForID(UUID userID) {
+        try {
+            Session session = cluster.connect("instagrim");
+            PreparedStatement ps = session.prepare("select login from userprofiles where userid = ? LIMIT 1");
+            ResultSet rs;
+            BoundStatement boundStatement = new BoundStatement(ps);
+
+            rs = session.execute(boundStatement.bind(userID));
+
+            if(rs.isExhausted()) {
+                System.out.println("User doesn't exist!");
+                return null;
+            } else {
+                return rs.one().getString("login");
+            }
+        } catch(NullPointerException e) {
+            if(Constants.DEBUG) {
+                System.out.println("---- Error at User IsValidUser method ----\n\n");
+                e.printStackTrace();
+            }
+            throw new NullPointerException("Cassandra cluster unavailable.");
+        }
     }
 
     /**

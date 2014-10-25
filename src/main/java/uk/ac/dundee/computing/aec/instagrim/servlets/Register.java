@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import uk.ac.dundee.computing.aec.instagrim.Constants;
 import uk.ac.dundee.computing.aec.instagrim.lib.CassandraHosts;
+import uk.ac.dundee.computing.aec.instagrim.lib.Converters;
 import uk.ac.dundee.computing.aec.instagrim.models.User;
 
 /**
@@ -60,10 +61,11 @@ public class Register extends HttpServlet {
 
             String username = request.getParameter("username");
             String password = request.getParameter("password");
+            java.util.UUID user_id = Converters.getTimeUUID();
 
             User us = new User();
             us.setCluster(cluster);
-            us.RegisterUser(username, password);
+            us.RegisterUser(username, password, user_id);
         } catch(Exception e) {
             if(Constants.DEBUG) {
                 System.out.println("---- Error at Register doPost user creation ----\n\n");

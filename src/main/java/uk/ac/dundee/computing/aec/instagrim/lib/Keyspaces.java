@@ -50,6 +50,7 @@ public final class Keyspaces {
                     + "  );";
             String CreateUserProfile = "CREATE TABLE if not exists instagrim.userprofiles (\n"
                     + "      login text PRIMARY KEY,\n"
+                    + "      userid uuid,\n"
                     + "      password text,\n"
                     + "      first_name text,\n"
                     + "      last_name text,\n"
@@ -57,6 +58,13 @@ public final class Keyspaces {
                     + "      addresses  map<text, frozen <address>>,\n"
                     + "      profile_content text\n"
                     + "  );";
+            String CreateComments = "CREATE TABLE if not exists instagrim.comments (\n"
+                    + "      thread_id uuid,\n"
+                    + "      date timestamp,\n"
+                    + "      user text,\n"
+                    + "      content text,\n"
+                    + "      PRIMARY KEY(thread_id, date)"
+                    + "  ) WITH CLUSTERING ORDER BY (date desc);";
 
             // Connects to the Cassandra cluster, `c`.
             Session session = c.connect();
@@ -108,7 +116,7 @@ public final class Keyspaces {
                 if(Constants.VERBOSE) System.out.println("Executing CreateAddressType query...");
                 session.execute(cqlQuery);
             } catch (Exception et) {
-                if(Constants.VERBOSE) System.out.println("Can't create Address type: " + et);
+                if(Constants.VERBOSE) System.out.println("Can't create AddressType: " + et);
                 if(Constants.DEBUG) et.printStackTrace();
             }
 
@@ -120,7 +128,19 @@ public final class Keyspaces {
                 if(Constants.VERBOSE) System.out.println("Executing CreateUserProfile query...");
                 session.execute(cqlQuery);
             } catch (Exception et) {
-                if(Constants.VERBOSE) System.out.println("Can't create Address Profile: " + et);
+                if(Constants.VERBOSE) System.out.println("Can't create UserProfile: " + et);
+                if(Constants.DEBUG) et.printStackTrace();
+            }
+
+            // Create the `comments` table.
+            if(Constants.DEBUG && Constants.VERBOSE) System.out.println("" + CreateComments);
+
+            try {
+                SimpleStatement cqlQuery = new SimpleStatement(CreateComments);
+                if(Constants.VERBOSE) System.out.println("Executing CreateComments query...");
+                session.execute(cqlQuery);
+            } catch (Exception et) {
+                if(Constants.VERBOSE) System.out.println("Can't create Comments: " + et);
                 if(Constants.DEBUG) et.printStackTrace();
             }
 

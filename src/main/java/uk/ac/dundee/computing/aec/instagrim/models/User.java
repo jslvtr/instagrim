@@ -48,14 +48,24 @@ public class User {
         }
 
         try {
-            Session session = cluster.connect("instagrim");
-            PreparedStatement ps = session.prepare("insert into userprofiles (login,userid,password) Values(?,?,?)");
 
-            BoundStatement boundStatement = new BoundStatement(ps);
-            session.execute(boundStatement.bind(username, user_id, EncodedPassword));
-            //We are assuming this always works.  Also a transaction would be good here !
+            if(IsValidUser(username, password) != null) {
+                return false;
+            } else {
 
-            return true;
+                Session session = cluster.connect("instagrim");
+                PreparedStatement ps = session.prepare("INSERT INTO userprofiles (login,userid,password) VALUES (?,?,?) IF NOT EXISTS");
+
+                BoundStatement boundStatement = new BoundStatement(ps);
+                session.execute(boundStatement.bind(username, user_id, EncodedPassword));
+                //We are assuming this always works.  Also a transaction would be good here !
+
+                if(IsValidUser(username, password) != null) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         } catch (Exception e) {
             if(Constants.DEBUG) {
                 System.out.println("---- Error at User RegisterUser method ----\n\n");

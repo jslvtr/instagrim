@@ -65,20 +65,22 @@ public class Register extends HttpServlet {
 
             User us = new User();
             us.setCluster(cluster);
-            us.RegisterUser(username, password, user_id);
+            if(us.RegisterUser(username, password, user_id)) {
+                try {
+                    response.sendRedirect("/");
+                } catch(IOException ioe) {
+                    if(Constants.DEBUG) {
+                        System.out.println("---- Error at Register doPost redirect ----\n\n");
+                        ioe.printStackTrace();
+                    }
+                }
+            } else {
+                response.sendError(409, "User already exists.");
+            }
         } catch(Exception e) {
             if(Constants.DEBUG) {
                 System.out.println("---- Error at Register doPost user creation ----\n\n");
                 e.printStackTrace();
-            }
-        }
-
-        try {
-            response.sendRedirect("/");
-        } catch(IOException ioe) {
-            if(Constants.DEBUG) {
-                System.out.println("---- Error at Register doPost redirect ----\n\n");
-                ioe.printStackTrace();
             }
         }
 

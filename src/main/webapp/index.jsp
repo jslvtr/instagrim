@@ -63,7 +63,7 @@
 
                     </ul>
 
-                    <div class="navbar-form navbar-left" role="search"">
+                    <div class="navbar-form navbar-left" role="search">
                         <div class="form-group">
                             <input type="text" id="profile_search" class="form-control" placeholder="Search for profile">
                         </div>

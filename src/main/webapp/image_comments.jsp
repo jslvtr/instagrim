@@ -38,7 +38,6 @@
                 %>
 
                 <li><a href="/Images/<%=lg.getUsername()%>">Your Images</a></li>
-                <li><a href="/profile/<%=lg.getUsername()%>">Your Profile</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Profile <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">

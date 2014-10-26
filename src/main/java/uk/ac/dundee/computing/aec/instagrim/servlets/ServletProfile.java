@@ -5,6 +5,8 @@ import com.datastax.driver.core.*;
 import uk.ac.dundee.computing.aec.instagrim.Constants;
 import uk.ac.dundee.computing.aec.instagrim.lib.CassandraHosts;
 import uk.ac.dundee.computing.aec.instagrim.lib.Converters;
+import uk.ac.dundee.computing.aec.instagrim.models.CommentModel;
+import uk.ac.dundee.computing.aec.instagrim.stores.CommentBean;
 import uk.ac.dundee.computing.aec.instagrim.stores.LoggedIn;
 import uk.ac.dundee.computing.aec.instagrim.stores.Profile;
 
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.LinkedList;
 
 @WebServlet(name = "Profile", urlPatterns = {"/profile/*", "/profile"})
 public class ServletProfile extends HttpServlet {
@@ -114,6 +117,11 @@ public class ServletProfile extends HttpServlet {
                 profile.setContent(rs.one().getString("profile_content"));
                 profile.setUsername(username);
                 request.getSession().setAttribute("Profile", profile);
+
+                CommentModel cm = new CommentModel(this.cluster);
+
+                LinkedList<CommentBean> commentList = cm.getCommentsForThread(lg.getUserID());
+                request.setAttribute("comments", commentList);
 
                 RequestDispatcher rd = request.getRequestDispatcher("/profile.jsp");
 

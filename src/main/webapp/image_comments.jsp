@@ -107,6 +107,7 @@
             </div>
             <input type="hidden" name="threadID" value="<%=imageUUID%>" />
             <input type="hidden" name="viewID" value="/Image/" />
+            <input type="hidden" name="redirectTo" value="<%=imageUUID%>" />
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                     <button type="submit" class="btn btn-default">Comment!</button>

@@ -1,5 +1,7 @@
 <%@ page import="uk.ac.dundee.computing.aec.instagrim.stores.LoggedIn" %>
 <%@ page import="uk.ac.dundee.computing.aec.instagrim.stores.Profile" %>
+<%@ page import="uk.ac.dundee.computing.aec.instagrim.stores.CommentBean" %>
+<%@ page import="java.util.UUID" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -21,6 +23,7 @@
         username = lg.getUsername();
     }
     Profile profile = (Profile)session.getAttribute("Profile");
+    java.util.LinkedList<CommentBean> commentList = (java.util.LinkedList<CommentBean>)request.getAttribute("comments");
 %>
 
 <nav class="navbar navbar-default" role="navigation">
@@ -93,12 +96,61 @@
             }
     %>
     <%
+        if(commentList != null) {
+            java.util.Iterator<CommentBean> iterator;
+            iterator = commentList.iterator();
+            while(iterator.hasNext()) {
+                CommentBean comment = iterator.next();
+
+    %>
+
+    <h3><%=comment.getUser()%></h3>
+    <p><%=comment.getContent()%></p>
+    <p><%=comment.getDate()%></p>
+
+    <%
+
+            }
+        }
+    %>
+    <form method="POST" action="/comment" role="form" class="form-horizontal">
+        <div class="form-group">
+            <div class="col-xs-4">
+                <label for="commentContent" class="col-sm-2 control-label">Comment</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="commentContent" name="content">
+                </div>
+            </div>
+        </div>
+        <%
+            if (lg != null && lg.getLoggedIn()) {
+        %>
+        <input type="hidden" name="threadID" value="<%=lg.getUserID()%>" />
+        <input type="hidden" name="viewID" value="/profile/" />
+        <input type="hidden" name="redirectTo" value="<%=profile.getUsername()%>" />
+        <%
+            } else {
+        %>
+        <input type="hidden" name="threadID" value="<%=UUID.randomUUID()%>" />
+        <input type="hidden" name="viewID" value="/" />
+        <input type="hidden" name="viewID" value="" />
+        <%
+            }
+        %>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default">Comment!</button>
+            </div>
+        </div>
+    </form>
+    <%
         } else {
     %>
     <h1>Profile doesn't exist!</h1>
     <%
         }
     %>
+
 </article>
 
 </body>

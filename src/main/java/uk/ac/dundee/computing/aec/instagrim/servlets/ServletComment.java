@@ -58,6 +58,7 @@ public class ServletComment extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         String content = request.getParameter("content");
         UUID threadID = UUID.fromString(request.getParameter("threadID"));
+        String redirectTo = request.getParameter("redirectTo");
         if(Constants.VERBOSE) {
             System.out.println("New comment: " + content);
             String[] contentArray = content.split("\r\n");
@@ -75,7 +76,7 @@ public class ServletComment extends HttpServlet {
 
         if(success) {
             try {
-                response.sendRedirect(request.getParameter("viewID") + threadID);
+                response.sendRedirect(request.getParameter("viewID") + redirectTo);
             } catch(IOException e) {
                 if(Constants.VERBOSE) {
                     System.out.println("Error forwarding after posting a comment!");

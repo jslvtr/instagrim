@@ -30,10 +30,15 @@ import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Date;
+import java.util.UUID;
 import javax.imageio.ImageIO;
 
 import static org.imgscalr.Scalr.*;
 
+import com.jhlabs.image.FeedbackFilter;
+import com.jhlabs.image.GainFilter;
+import com.jhlabs.image.InvertFilter;
+import com.jhlabs.image.PointillizeFilter;
 import org.imgscalr.Scalr.Method;
 
 import uk.ac.dundee.computing.aec.instagrim.Constants;
@@ -84,12 +89,17 @@ public class PicModel {
         }
     }
 
-    public void insertPic(byte[] b, String type, String name, String user) {
+    public void insertPic(byte[] b, String type, String name, String user, String new_picid, String filterName) {
         try {
             String types[] = Converters.SplitFiletype(type);
             ByteBuffer buffer = ByteBuffer.wrap(b);
             int length = b.length;
-            java.util.UUID picid = Converters.getTimeUUID();
+            java.util.UUID picid;
+            if (new_picid.equals("")) {
+                 picid = Converters.getTimeUUID();
+            } else {
+                picid = UUID.fromString(new_picid);
+            }
 
             //The following is a quick and dirty way of doing this, will fill the disk quickly !
             Boolean success = (new File("/var/tmp/instagrim/")).mkdirs();
@@ -100,7 +110,7 @@ public class PicModel {
             byte[] thumbb = picresize(picid.toString(), types[1]);
             int thumblength = thumbb.length;
             ByteBuffer thumbbuf = ByteBuffer.wrap(thumbb);
-            byte[] processedb = picdecolour(picid.toString(), types[1]);
+            byte[] processedb = picdecolour(picid.toString(), types[1], filterName);
             ByteBuffer processedbuf = ByteBuffer.wrap(processedb);
             int processedlength = processedb.length;
 
@@ -143,10 +153,10 @@ public class PicModel {
         return null;
     }
 
-    public byte[] picdecolour(String picid, String type) {
+    public byte[] picdecolour(String picid, String type, String filterName) {
         try {
             BufferedImage BI = ImageIO.read(new File("/var/tmp/instagrim/" + picid));
-            BufferedImage processed = createProcessed(BI);
+            BufferedImage processed = createProcessed(BI, filterName);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(processed, type, baos);
             baos.flush();
@@ -160,15 +170,45 @@ public class PicModel {
     }
 
     public static BufferedImage createThumbnail(BufferedImage img) {
-        img = resize(img, Method.SPEED, 250, OP_ANTIALIAS, OP_GRAYSCALE);
+        img = resize(img, Method.SPEED, 250, OP_ANTIALIAS);
         // Let's add a little border before we return result.
         return pad(img, 2);
     }
 
-    public static BufferedImage createProcessed(BufferedImage img) {
+    public static BufferedImage createProcessed(BufferedImage img, String filterName) {
         int Width = img.getWidth() - 1;
-        img = resize(img, Method.SPEED, Width, OP_ANTIALIAS, OP_GRAYSCALE);
-        return pad(img, 4);
+        if(filterName.equals("Invert")) {
+            InvertFilter invertFilter = new InvertFilter();
+            BufferedImage out = new BufferedImage(img.getWidth(), img.getHeight(), img.getType());
+            invertFilter.filter(img, out);
+            return out;
+        } else if(filterName.equals("GainDark")) {
+            GainFilter gainFilter = new GainFilter();
+            gainFilter.setGain(0.7f);
+            BufferedImage out = new BufferedImage(img.getWidth(), img.getHeight(), img.getType());
+            gainFilter.filter(img, out);
+            return out;
+        } else if(filterName.equals("GainLight")) {
+            GainFilter gainFilter = new GainFilter();
+            gainFilter.setGain(0.3f);
+            BufferedImage out = new BufferedImage(img.getWidth(), img.getHeight(), img.getType());
+            gainFilter.filter(img, out);
+            return out;
+        } else if(filterName.equals("Pointillize")) {
+            PointillizeFilter pointillizeFilter = new PointillizeFilter();
+            pointillizeFilter.setScale(10f);
+            pointillizeFilter.setRandomness(0.1f);
+            pointillizeFilter.setAmount(0.1f);
+            pointillizeFilter.setFuzziness(0.1f);
+            pointillizeFilter.setTurbulence(10f);
+            pointillizeFilter.setGridType(PointillizeFilter.SQUARE);
+            BufferedImage out = new BufferedImage(img.getWidth(), img.getHeight(), img.getType());
+            pointillizeFilter.filter(img, out);
+            return out;
+        } else { //grayscale
+            img = resize(img, Method.SPEED, Width, OP_ANTIALIAS, OP_GRAYSCALE);
+            return pad(img, 4);
+        }
     }
 
     public java.util.LinkedList<Pic> getPicsForUser(String User) {
@@ -230,7 +270,6 @@ public class PicModel {
                     } else if(image_type == Converters.DISPLAY_THUMB) {
                         bImage = row.getBytes("thumb");
                         length = row.getInt("thumblength");
-
                     } else if(image_type == Converters.DISPLAY_PROCESSED) {
                         bImage = row.getBytes("processed");
                         length = row.getInt("processedlength");

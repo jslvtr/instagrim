@@ -2,14 +2,13 @@ package uk.ac.dundee.computing.aec.instagrim.servlets;
 
 import com.datastax.driver.core.Cluster;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
+import java.io.*;
 import java.util.UUID;
 
+import javax.imageio.ImageIO;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -21,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
+import com.jhlabs.image.InvertFilter;
 import uk.ac.dundee.computing.aec.instagrim.Constants;
 import uk.ac.dundee.computing.aec.instagrim.lib.CassandraHosts;
 import uk.ac.dundee.computing.aec.instagrim.lib.Converters;
@@ -216,8 +216,6 @@ public class Image extends HttpServlet {
         response.setContentType(p.getType());
         response.setContentLength(p.getLength());
 
-        //out.write(Image);
-
         InputStream is = new ByteArrayInputStream(p.getBytes());
         BufferedInputStream input = new BufferedInputStream(is);
         byte[] buffer = new byte[8192];
@@ -237,37 +235,41 @@ public class Image extends HttpServlet {
      * @throws IOException
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String picid = request.getParameter("picid");
+        String filterName = request.getParameter("filter");
+
         for(Part part : request.getParts()) {
             System.out.println("Part Name " + part.getName());
+            if(part.getName().equals("upfile")) {
 
-            String type = part.getContentType();
-            String filename = part.getSubmittedFileName();
-            String username = "majed";
+                String type = part.getContentType();
+                String filename = part.getSubmittedFileName();
+                String username = "majed";
 
-            InputStream is = request.getPart(part.getName()).getInputStream();
-            int i = is.available();
+                InputStream is = request.getPart(part.getName()).getInputStream();
+                int i = is.available();
 
-            HttpSession session = request.getSession();
-            LoggedIn lg = (LoggedIn)session.getAttribute("LoggedIn");
+                HttpSession session = request.getSession();
+                LoggedIn lg = (LoggedIn)session.getAttribute("LoggedIn");
 
-            if(lg.getLoggedIn()) {
-                username = lg.getUsername();
+                if(lg.getLoggedIn()) {
+                    username = lg.getUsername();
+                }
+
+                if(i > 0) {
+                    byte[] b = new byte[i + 1];
+                    is.read(b);
+                    System.out.println("Length : " + b.length);
+                    PicModel tm = new PicModel();
+                    tm.setCluster(cluster);
+                    tm.insertPic(b, type, filename, username, picid, filterName);
+
+                    is.close();
+                }
             }
-
-            if(i > 0) {
-                byte[] b = new byte[i + 1];
-                is.read(b);
-                System.out.println("Length : " + b.length);
-                PicModel tm = new PicModel();
-                tm.setCluster(cluster);
-                tm.insertPic(b, type, filename, username);
-
-                is.close();
-            }
-
-            RequestDispatcher rd = request.getRequestDispatcher("/upload.jsp");
-            rd.forward(request, response);
         }
+        RequestDispatcher rd = request.getRequestDispatcher("/upload.jsp");
+        rd.forward(request, response);
     }
 
     /**

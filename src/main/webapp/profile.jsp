@@ -2,6 +2,7 @@
 <%@ page import="uk.ac.dundee.computing.aec.instagrim.stores.Profile" %>
 <%@ page import="uk.ac.dundee.computing.aec.instagrim.stores.CommentBean" %>
 <%@ page import="java.util.UUID" %>
+<%@ page import="uk.ac.dundee.computing.aec.instagrim.stores.AddressBean" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -24,6 +25,7 @@
     }
     Profile profile = (Profile)session.getAttribute("Profile");
     java.util.LinkedList<CommentBean> commentList = (java.util.LinkedList<CommentBean>)request.getAttribute("comments");
+    java.util.LinkedList<AddressBean> addressList = (java.util.LinkedList<AddressBean>)request.getAttribute("addressList");
 %>
 
 <nav class="navbar navbar-default" role="navigation">
@@ -78,6 +80,8 @@
             if(profile.getUsername() != null && !profile.getUsername().equals("")) {
     %>
     <h1><%=profile.getUsername()%>'s profile</h1>
+    <a href="/FullImage/<%=profile.getUserID()%>"><img src="/Thumb/<%=profile.getUserID()%>"></a><br/>
+    <a href="/Image/<%=profile.getUserID()%>/delete">Delete</a><br/>
     <%
             }
             if(profile.getContent() != null && !profile.getContent().equals("")) {
@@ -94,7 +98,30 @@
     <%
             }
     %>
+<h2>Address list</h2>
     <%
+        if(addressList != null) {
+            java.util.Iterator<AddressBean> iterator;
+            iterator = addressList.iterator();
+            while(iterator.hasNext()) {
+                AddressBean address = iterator.next();
+
+    %>
+
+    <h3><%=address.getName()%></h3>
+    <p><%=address.getCity()%></p>
+    <p><%=address.getStreet()%></p>
+    <p><%=address.getZip()%></p>
+
+    <%
+
+            }
+        } else {
+    %>
+    <p>None yet!</p>
+<h2>Comments</h2>
+    <%
+        }
         if(commentList != null) {
             java.util.Iterator<CommentBean> iterator;
             iterator = commentList.iterator();
@@ -110,6 +137,10 @@
     <%
 
             }
+        } else {
+    %>
+    <p>Be the first to comment!</p>
+    <%
         }
     %>
     <form method="POST" action="/comment" role="form" class="form-horizontal">

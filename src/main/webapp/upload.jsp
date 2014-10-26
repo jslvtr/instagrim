@@ -78,6 +78,21 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <div class="col-xs-4">
+                        <label for="filter" class="col-sm-2 control-label">Filter to apply</label>
+                        <div class="col-sm-10">
+                            <select id="filter" name="filter">
+                                <option value="Invert">Invert</option>
+                                <option value="GainLight">GainLight</option>
+                                <option value="GainDark">GainDark</option>
+                                <option value="Pointillize">Pointillize</option>
+                                <option value="Grayscale">Grayscale</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="picid" value="" />
+                <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                         <button type="submit" class="btn btn-default">Upload</button>
                     </div>

@@ -75,6 +75,44 @@
 </nav>
 
 <h1>Edit your profile</h1>
+
+<%
+    if(lg != null && lg.getLoggedIn()) {
+%>
+<form method="POST" enctype="multipart/form-data" action="Image">
+    <div class="form-group">
+        <div class="col-xs-4">
+            <label for="uploadFile" class="col-sm-2 control-label">File to upload</label>
+            <div class="col-sm-10">
+                <input type="file" class="form-control" id="uploadFile" name="upfile">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-xs-4">
+            <label for="filter" class="col-sm-2 control-label">Filter to apply</label>
+            <div class="col-sm-10">
+                <select id="filter" name="filter">
+                    <option value="Invert">Invert</option>
+                    <option value="GainLight">GainLight</option>
+                    <option value="GainDark">GainDark</option>
+                    <option value="Grayscale">Grayscale</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="picid" value="<%=lg.getUserID()%>" />
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-default">Upload</button>
+        </div>
+    </div>
+</form>
+<%
+    }
+%>
+
+<div>
 <form method="POST" action="profile">
     <label for="content">Content</label>
     <textarea id="content" name="content" rows="15" cols="30">
@@ -91,8 +129,44 @@
             }
         %>
     </textarea>
-    <input type="submit" value="Submit">
+    <div class="form-group">
+        <div class="col-xs-4">
+            <label for="name" class="col-sm-2 control-label">New address friendly name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="name" name="name" value="">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-xs-4">
+            <label for="city" class="col-sm-2 control-label">City</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="city" name="city" value="">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-xs-4">
+            <label for="street" class="col-sm-2 control-label">Street</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="street" name="street" value="">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-xs-4">
+            <label for="zip" class="col-sm-2 control-label">ZIP</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="zip" name="zip" value="">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-default">Submit</button>
+        </div>
+    </div>
 </form>
-
+</div>
 </body>
 </html>

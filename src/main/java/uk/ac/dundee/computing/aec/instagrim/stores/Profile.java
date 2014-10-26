@@ -1,6 +1,7 @@
 package uk.ac.dundee.computing.aec.instagrim.stores;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * Class to store and send a user's profile through our session.
@@ -12,6 +13,7 @@ public class Profile implements Serializable {
 
     private String content;
     private String username;
+    private UUID userID;
 
     /**
      * Nullary constructor to match the JavaBean standard.
@@ -50,6 +52,14 @@ public class Profile implements Serializable {
      */
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public UUID getUserID() {
+        return userID;
+    }
+
+    public void setUserID(UUID userID) {
+        this.userID = userID;
     }
 
     /**

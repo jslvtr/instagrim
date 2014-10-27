@@ -82,7 +82,7 @@ public class ServletProfile extends HttpServlet {
         address.setStreet(street);
         address.setZip(zip);
 
-        UserType addressUDT = cluster.getMetadata().getKeyspace("instagrim").getUserType("address");
+        UserType addressUDT = cluster.getMetadata().getKeyspace("instagrim_js").getUserType("address");
 
         UDTValue addressObject = addressUDT.newValue()
                 .setString("street", address.getStreet())
@@ -97,7 +97,7 @@ public class ServletProfile extends HttpServlet {
             updateQuery = "UPDATE userprofiles SET profile_content = ? WHERE login = ?";
         }
 
-        Session session = cluster.connect("instagrim");
+        Session session = cluster.connect("instagrim_js");
         PreparedStatement ps = session.prepare(updateQuery);
         BoundStatement boundStatement = new BoundStatement(ps);
 
@@ -113,7 +113,7 @@ public class ServletProfile extends HttpServlet {
         session.close();
 
         try {
-            response.sendRedirect("/profile/" + username);
+            response.sendRedirect("/instagrim-js/profile/" + username);
         } catch(IOException ioe) {
             if(Constants.VERBOSE) {
                 System.out.println("Error at redirect after profile post.");
@@ -140,7 +140,7 @@ public class ServletProfile extends HttpServlet {
         String args[] = Converters.SplitRequestPath(request);
 
         try {
-            username = args[1];
+            username = args[2];
         } catch(NullPointerException|ArrayIndexOutOfBoundsException e) {
             if(Constants.VERBOSE) {
                 System.out.println("Error getting user profile for profile display.");
@@ -152,7 +152,7 @@ public class ServletProfile extends HttpServlet {
         }
 
         try {
-            Session session = cluster.connect("instagrim");
+            Session session = cluster.connect("instagrim_js");
             PreparedStatement ps = session.prepare("SELECT profile_content, userid, addresses FROM userprofiles WHERE login = ? LIMIT 1");
             ResultSet rs;
             BoundStatement boundStatement = new BoundStatement(ps);
@@ -160,7 +160,7 @@ public class ServletProfile extends HttpServlet {
             rs = session.execute(boundStatement.bind(username));
 
             if(rs.isExhausted()) {
-                System.out.println("No Images returned");
+                System.out.println("Couldn't find a profile for that user");
             } else {
                 Profile profile = new Profile();
                 Row r = rs.one();

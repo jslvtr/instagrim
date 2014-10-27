@@ -22,8 +22,8 @@ public final class Keyspaces {
      */
     public static void SetUpKeySpaces(Cluster c) {
         try {
-            String CreateKeyspace = "CREATE KEYSPACE if not exists instagrim  WITH replication = {'class':'SimpleStrategy', 'replication_factor':1}";
-            String CreatePicTable = "CREATE TABLE if not exists instagrim.Pics ("
+            String CreateKeyspace = "CREATE KEYSPACE if not exists instagrim_js  WITH replication = {'class':'SimpleStrategy', 'replication_factor':1}";
+            String CreatePicTable = "CREATE TABLE if not exists instagrim_js.Pics ("
                     + " user varchar,"
                     + " picid uuid PRIMARY KEY, "
                     + " interaction_time timestamp,"
@@ -37,18 +37,18 @@ public final class Keyspaces {
                     + " type  varchar,"
                     + " name  varchar"
                     + ")";
-            String CreateUserPicList = "CREATE TABLE if not exists instagrim.userpiclist (\n"
+            String CreateUserPicList = "CREATE TABLE if not exists instagrim_js.userpiclist (\n"
                     + "picid uuid,\n"
                     + "user varchar,\n"
                     + "pic_added timestamp,\n"
                     + "PRIMARY KEY (user,picid,pic_added)\n"
                     + ") WITH CLUSTERING ORDER BY (picid desc, pic_added desc);";
-            String CreateAddressType = "CREATE TYPE if not exists instagrim.address (\n"
+            String CreateAddressType = "CREATE TYPE if not exists instagrim_js.address (\n"
                     + "      street text,\n"
                     + "      city text,\n"
                     + "      zip int\n"
                     + "  );";
-            String CreateUserProfile = "CREATE TABLE if not exists instagrim.userprofiles (\n"
+            String CreateUserProfile = "CREATE TABLE if not exists instagrim_js.userprofiles (\n"
                     + "      login text PRIMARY KEY,\n"
                     + "      userid uuid,\n"
                     + "      password text,\n"
@@ -58,7 +58,7 @@ public final class Keyspaces {
                     + "      addresses  map<text, frozen <address>>,\n"
                     + "      profile_content text\n"
                     + "  );";
-            String CreateComments = "CREATE TABLE if not exists instagrim.comments (\n"
+            String CreateComments = "CREATE TABLE if not exists instagrim_js.comments (\n"
                     + "      thread_id uuid,\n"
                     + "      date timestamp,\n"
                     + "      user text,\n"
@@ -75,9 +75,9 @@ public final class Keyspaces {
                 BoundStatement boundStatement = new BoundStatement(statement);
                 if(Constants.VERBOSE) System.out.println("Executing Keyspace prepared statement...");
                 session.execute(boundStatement);
-                if(Constants.VERBOSE) System.out.println("Created instagrim Keyspace.");
+                if(Constants.VERBOSE) System.out.println("Created instagrim_js Keyspace.");
             } catch (Exception et) {
-                if(Constants.VERBOSE) System.out.println("Can't create instagrim: " + et);
+                if(Constants.VERBOSE) System.out.println("Can't create instagrim_js: " + et);
             }
 
             /*

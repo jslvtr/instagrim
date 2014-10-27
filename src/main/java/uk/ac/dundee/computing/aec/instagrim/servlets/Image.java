@@ -84,10 +84,10 @@ public class Image extends HttpServlet {
         String args[] = Converters.SplitRequestPath(request);
 
         try {
-            if(args[0].equals("Image")) {
+            if(args[1].equals("Image")) {
                 try {
-                    if(args[2] != null && args[2].toLowerCase().equals("delete")) {
-                        DeleteImage(args[1], request, response);
+                    if(args[3] != null && args[3].toLowerCase().equals("delete")) {
+                        DeleteImage(args[2], request, response);
                         return;
                     }
                 } catch(ArrayIndexOutOfBoundsException ex) {
@@ -100,22 +100,22 @@ public class Image extends HttpServlet {
                 }
 
                 try { //show image with comments
-                    DisplayImageWithComments(args[1], request, response);
+                    DisplayImageWithComments(args[2], request, response);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     if(Constants.VERBOSE) {
-                        System.out.println("Error accessing args[1]. Maybe no argument was provided?");
+                        System.out.println("Error accessing args[2]. Maybe no argument was provided?");
                     }
                     if(Constants.DEBUG) {
                         e.printStackTrace();
                     }
                 }
-            } else if(args[0].equals("Images")) {
-                DisplayImageList(args[1], request, response);
-            } else if(args[0].equals("Thumb")) {
-                DisplayImage(Converters.DISPLAY_THUMB, args[1], response);
-            } else if(args[0].equals("FullImage")) { //display image as raw
+            } else if(args[1].equals("Images")) {
+                DisplayImageList(args[2], request, response);
+            } else if(args[1].equals("Thumb")) {
+                DisplayImage(Converters.DISPLAY_THUMB, args[2], response);
+            } else if(args[1].equals("FullImage")) { //display image as raw
                 try {
-                    DisplayImage(Converters.DISPLAY_PROCESSED, args[1], response);
+                    DisplayImage(Converters.DISPLAY_PROCESSED, args[2], response);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     if(Constants.VERBOSE) {
                         System.out.println("Error accessing args[1]. Maybe no argument was provided?");

@@ -28,7 +28,7 @@ public class CommentModel {
 
     public boolean addComment(UUID threadID, String content, String user) {
         try {
-            Session session = cluster.connect("instagrim");
+            Session session = cluster.connect("instagrim_js");
             PreparedStatement ps = session.prepare("insert into comments (thread_id,date,user,content) Values(?,?,?,?)");
 
             BoundStatement boundStatement = new BoundStatement(ps);
@@ -48,7 +48,7 @@ public class CommentModel {
 
     public LinkedList<CommentBean> getCommentsForThread(UUID threadID) {
         LinkedList<CommentBean> commentList = new LinkedList<>();
-        Session session = cluster.connect("instagrim");
+        Session session = cluster.connect("instagrim_js");
         PreparedStatement ps = session.prepare("SELECT content, user, date FROM comments WHERE thread_id = ?");
 
         if(Constants.VERBOSE) {

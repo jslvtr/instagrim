@@ -27,7 +27,7 @@ public class AddressModel {
 
     public LinkedList<AddressBean> getAddressesForUser(String login) {
         LinkedList<AddressBean> addressList = new LinkedList<>();
-        Session session = cluster.connect("instagrim");
+        Session session = cluster.connect("instagrim_js");
         PreparedStatement ps = session.prepare("SELECT addresses FROM userprofiles WHERE login = ?");
 
         if(Constants.VERBOSE) {
@@ -43,7 +43,7 @@ public class AddressModel {
         } else {
             Row row = rs.one();
 
-            UserType addressUDT = cluster.getMetadata().getKeyspace("instagrim").getUserType("address");
+            UserType addressUDT = cluster.getMetadata().getKeyspace("instagrim_js").getUserType("address");
 
             Map<String, UDTValue> addressMap = row.getMap("addresses", String.class, UDTValue.class);
 

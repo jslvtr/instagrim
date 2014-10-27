@@ -53,7 +53,7 @@ public class User {
                 return false;
             } else {
 
-                Session session = cluster.connect("instagrim");
+                Session session = cluster.connect("instagrim_js");
                 PreparedStatement ps = session.prepare("INSERT INTO userprofiles (login,userid,password) VALUES (?,?,?) IF NOT EXISTS");
 
                 BoundStatement boundStatement = new BoundStatement(ps);
@@ -96,7 +96,7 @@ public class User {
         }
 
         try {
-            Session session = cluster.connect("instagrim");
+            Session session = cluster.connect("instagrim_js");
             PreparedStatement ps = session.prepare("select userid, password from userprofiles where login = ?");
             ResultSet rs;
             BoundStatement boundStatement = new BoundStatement(ps);
@@ -128,7 +128,7 @@ public class User {
 
     public String getUsernameForID(UUID userID) {
         try {
-            Session session = cluster.connect("instagrim");
+            Session session = cluster.connect("instagrim_js");
             PreparedStatement ps = session.prepare("select login from userprofiles where userid = ? LIMIT 1");
             ResultSet rs;
             BoundStatement boundStatement = new BoundStatement(ps);

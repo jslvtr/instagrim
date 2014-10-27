@@ -56,7 +56,7 @@ public class PicModel {
 
     public void deletePic(String user, java.util.UUID picid) {
         try {
-            Session session = cluster.connect("instagrim");
+            Session session = cluster.connect("instagrim_js");
 
             PreparedStatement psDeletePic = session.prepare("DELETE FROM pics WHERE picid = ?;");
             PreparedStatement psDeletePicFromUser = session.prepare("DELETE FROM userpiclist WHERE user = ? AND picid = ?");
@@ -78,7 +78,7 @@ public class PicModel {
 
     public void deletePicFromFilesystem(java.util.UUID picid) {
         try {
-            Files.deleteIfExists(new File("/var/tmp/instagrim/" + picid).toPath());
+            Files.deleteIfExists(new File("/var/tmp/instagrim_js/" + picid).toPath());
         } catch(IOException ioe) {
             if(Constants.VERBOSE) {
                 System.out.println("Error at PicModel#deletePicFromFilesystem(UUID)");
@@ -102,8 +102,8 @@ public class PicModel {
             }
 
             //The following is a quick and dirty way of doing this, will fill the disk quickly !
-            Boolean success = (new File("/var/tmp/instagrim/")).mkdirs();
-            FileOutputStream output = new FileOutputStream(new File("/var/tmp/instagrim/" + picid));
+            Boolean success = (new File("/var/tmp/instagrim_js/")).mkdirs();
+            FileOutputStream output = new FileOutputStream(new File("/var/tmp/instagrim_js/" + picid));
 
             output.write(b);
 
@@ -114,7 +114,7 @@ public class PicModel {
             ByteBuffer processedbuf = ByteBuffer.wrap(processedb);
             int processedlength = processedb.length;
 
-            Session session = cluster.connect("instagrim");
+            Session session = cluster.connect("instagrim_js");
 
             PreparedStatement psInsertPic = session.prepare("insert into pics ( picid, image,thumb,processed, user, interaction_time,imagelength,thumblength,processedlength,type,name) values(?,?,?,?,?,?,?,?,?,?,?)");
             PreparedStatement psInsertPicToUser = session.prepare("insert into userpiclist ( picid, user, pic_added) values(?,?,?)");
@@ -138,7 +138,7 @@ public class PicModel {
 
     public byte[] picresize(String picid, String type) {
         try {
-            BufferedImage BI = ImageIO.read(new File("/var/tmp/instagrim/" + picid));
+            BufferedImage BI = ImageIO.read(new File("/var/tmp/instagrim_js/" + picid));
             BufferedImage thumbnail = createThumbnail(BI);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(thumbnail, type, baos);
@@ -155,7 +155,7 @@ public class PicModel {
 
     public byte[] picdecolour(String picid, String type, String filterName) {
         try {
-            BufferedImage BI = ImageIO.read(new File("/var/tmp/instagrim/" + picid));
+            BufferedImage BI = ImageIO.read(new File("/var/tmp/instagrim_js/" + picid));
             BufferedImage processed = createProcessed(BI, filterName);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ImageIO.write(processed, type, baos);
@@ -213,7 +213,7 @@ public class PicModel {
 
     public java.util.LinkedList<Pic> getPicsForUser(String User) {
         java.util.LinkedList<Pic> Pics = new java.util.LinkedList<>();
-        Session session = cluster.connect("instagrim");
+        Session session = cluster.connect("instagrim_js");
         PreparedStatement ps = session.prepare("SELECT picid FROM userpiclist WHERE user = ?");
         if(Constants.VERBOSE) System.out.println("SELECT picid FROM userpiclist WHERE user = " + User);
         ResultSet rs = null;
@@ -238,7 +238,7 @@ public class PicModel {
     }
 
     public Pic getPic(int image_type, java.util.UUID picid) {
-        Session session = cluster.connect("instagrim");
+        Session session = cluster.connect("instagrim_js");
         ByteBuffer bImage = null;
         String type = null;
         int length = 0;

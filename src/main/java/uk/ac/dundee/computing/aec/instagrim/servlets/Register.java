@@ -67,7 +67,7 @@ public class Register extends HttpServlet {
             us.setCluster(cluster);
             if(us.RegisterUser(username, password, user_id)) {
                 try {
-                    response.sendRedirect("/");
+                    response.sendRedirect("/instagrim-js/");
                 } catch(IOException ioe) {
                     if(Constants.DEBUG) {
                         System.out.println("---- Error at Register doPost redirect ----\n\n");

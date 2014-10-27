@@ -92,7 +92,7 @@ public class Login extends HttpServlet {
                 System.out.println("Session in servlet " + session);
             }
 
-            RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+            RequestDispatcher rd = request.getRequestDispatcher("/index.jsp");
             try {
                 rd.forward(request, response);
             } catch(ServletException | IOException e) {

@@ -10,10 +10,10 @@
 <html>
     <head>
         <title>Instagrim</title>
-        <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />
-        <link rel="stylesheet" type="text/css" href="/css/bootstrap-theme.css" />
-        <script src="/js/jquery-1.11.1.min.js"></script>
-        <script src="/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="/instagrim-js/css/bootstrap.css" />
+        <link rel="stylesheet" type="text/css" href="/instagrim-js/css/bootstrap-theme.css" />
+        <script src="/instagrim-js/js/jquery-1.11.1.min.js"></script>
+        <script src="/instagrim-js/js/bootstrap.min.js"></script>
 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,33 +29,33 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/">instagrim</a>
+                    <a class="navbar-brand" href="/instagrim-js/">instagrim</a>
                 </div>
 
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="/upload.jsp">Upload</a></li>
+                        <li class="active"><a href="/instagrim-js/upload.jsp">Upload</a></li>
 
                         <%
                             LoggedIn lg = (LoggedIn) session.getAttribute("LoggedIn");
                             if (lg != null && lg.getLoggedIn()) {
                         %>
 
-                        <li><a href="/Images/<%=lg.getUsername()%>">Your Images</a></li>
-                        <li><a href="/profile/<%=lg.getUsername()%>">Your Profile</a></li>
+                        <li><a href="/instagrim-js/Images/<%=lg.getUsername()%>">Your Images</a></li>
+                        <li><a href="/instagrim-js/profile/<%=lg.getUsername()%>">Your Profile</a></li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Profile <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="/profile/<%=lg.getUsername()%>">View your profile</a></li>
-                                <li><a href="/edit_profile.jsp">Edit your profile</a></li>
+                                <li><a href="/instagrim-js/profile/<%=lg.getUsername()%>">View your profile</a></li>
+                                <li><a href="/instagrim-js/edit_profile.jsp">Edit your profile</a></li>
                             </ul>
                         </li>
 
                         <%
                         } else {
                         %>
-                        <li><a href="/register.jsp">Register</a></li>
-                        <li><a href="/login.jsp">Login</a></li>
+                        <li><a href="/instagrim-js/register.jsp">Register</a></li>
+                        <li><a href="/instagrim-js/login.jsp">Login</a></li>
                         <%
                             }
                         %>

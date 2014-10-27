@@ -76,7 +76,7 @@ public class ServletComment extends HttpServlet {
 
         if(success) {
             try {
-                response.sendRedirect(request.getParameter("viewID") + redirectTo);
+                response.sendRedirect("/instagrim-js/" + request.getParameter("viewID") + redirectTo);
             } catch(IOException e) {
                 if(Constants.VERBOSE) {
                     System.out.println("Error forwarding after posting a comment!");

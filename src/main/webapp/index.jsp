@@ -67,7 +67,7 @@
                         <div class="form-group">
                             <input type="text" id="profile_search" class="form-control" placeholder="Search for profile">
                         </div>
-                        <button type="submit" class="btn btn-default" onClick="javascript:window.location.href='/profile/'.concat(document.getElementById('profile_search').value   );">Search</button>
+                        <button type="submit" class="btn btn-default" onClick="javascript:window.location.href='/instagrim-js/profile/'.concat(document.getElementById('profile_search').value   );">Search</button>
                     </div>
                 </div>
             </div>
